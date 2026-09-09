@@ -25,25 +25,16 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build release APK
-        run: ./gradlew assembleRelease
-
-      - name: Build APK
+      - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      - name: Upload Debug APK
+      - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: porch-light-debug
+          name: porch-light-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
-      - name: Upload Release APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: porch-light-release
-          path: app/build/outputs/apk/release/app-release-unsigned.apk
-
-      - name: Create Release
+      - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: actions/create-release@v1
         env:
@@ -51,16 +42,28 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Porch Light ${{ github.ref }}
+          body: |
+            ## Porch Light Android Release
+            
+            ### How to Install:
+            1. Download `app-debug.apk`
+            2. Transfer to your Android phone
+            3. Open the APK file on your phone
+            4. Tap "Install"
+            5. Grant permissions
+            6. Launch the app and sign in with Google!
+            
+            ### Requirements:
+            - Android 7.0+ (API 24+)
+            - Internet connection
+            - Google account for authentication
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload APK to Release
         if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v1
+        with:
+          files: app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./app/build/outputs/apk/release/app-release-unsigned.apk
-          asset_name: porch-light-${{ github.ref }}.apk
-          asset_content_type: application/vnd.android.package-archive
