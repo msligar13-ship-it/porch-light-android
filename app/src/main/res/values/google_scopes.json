@@ -1,0 +1,16 @@
+{
+  "client_id": "porchlight-swarm-app.apps.googleusercontent.com",
+  "project_id": "porchlight-app",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "requested_scopes": [
+    {
+      "scope_url": "https://www.googleapis.com/auth/userinfo.profile",
+      "tier": "NON_SENSITIVE"
+    },
+    {
+      "scope_url": "https://www.googleapis.com/auth/calendar.events.readonly",
+      "tier": "SENSITIVE"
+    }
+  ]
+}
